@@ -1,9 +1,8 @@
-# Restormer-Plus for Real World Image Deraining: One State-of-the-Art to the GT-RAIN Challenge (CVPR 2023 UG2+ Track 3)
-Chaochao Zheng, Luping Wang, Bin Liu
+# Restormer-Plus for Real World Image Deraining: One State-of-the-Art Solution to the GT-RAIN Challenge (CVPR 2023 UG2+ Track 3)
+This is the Python code used to implement the Restormer-Plus method as described in the technical report:
 
-Research Center for Applied Mathematics and Machine Intelligence
-
-Zhejiang Lab, Hangzhou 311121, China
+[**Restormer-Plus for Real World Image Deraining: One State-of-the-Art Solution to the GT-RAIN Challenge (CVPR 2023 UG2+ Track 3)**  
+Chaochao Zheng, Luping Wang, Bin Liu](https://arxiv.org/abs/2305.05454)
 
 [//]: # (## Technical Report Link)
 
