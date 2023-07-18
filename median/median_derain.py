@@ -6,7 +6,8 @@ from pathlib import Path
 import numpy as np
 from PIL import Image
 from natsort import natsorted
-# https://github.com/ZJLAB-AMMI/Restormer-Plus.git
+
+
 is_train = True
 if is_train:
     data_dir = '/gt-rain/GT-RAIN_train'

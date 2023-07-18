@@ -7,21 +7,25 @@ import numpy as np
 from PIL import Image
 from natsort import natsorted
 
-# median_res_root = '/gt-rain/result/median'
-# train_data_root = '/gt-rain/GT-RAIN_train'
-
-test_median_res_dir = 'D:/job/competition/gt_rain_best_result/median'
-train_median_res_dir = 'D:/job/competition/gt_rain_best_result/train_median'
-# pixels_file = 'D:/job/competition/gt_rain_best_result/pixels.pkl'
-pixels_file = 'D:/job/competition/gt_rain_best_result/saved_pixels_all.pkl'
-save_dir = 'D:/job/competition/gt_rain_best_result/similar_patch'
-
-pixels = pickle.load(open(pixels_file, 'rb'))
-
-valid_pixels = {}
-
+# ==========config
+f"""
+    test_median_res_dir: the directory of the median result of test data, achieved by running median_derain.py
+    train_median_res_dir: the directory of the median result of train data, achieved by running median_derain.py
+    pixels_file: a .pkl file where contains the position info of the pixels whose values require to be estimated. 
+        Format: a dict, the key is the scene name, the value is a list of pixel-position.
+    save_dir: where to save the similar patches.
+    patch_size: the size of the patch.
+    min_dis: the threshold used to select similar patches.
+"""
+test_median_res_dir = '/gt-rain/result/test_median'
+train_median_res_dir = '/gt-rain/result/train_median'
+pixels_file = '/gt-rain/result/pixels.pkl'
+save_dir = '/gt-rain/result/similar_patch'
 patch_size = 8
 min_dis = 6
+# ==========
+
+pixels = pickle.load(open(pixels_file, 'rb'))
 
 
 def get_img_paths(data_dir):
@@ -39,15 +43,12 @@ def get_img_paths(data_dir):
     return img_paths
 
 
-for scene_name, pixels_data in pixels.items():
+for scene_name, pixels_pos in pixels.items():
     test_median_res = np.asarray(Image.open(os.path.join(test_median_res_dir, scene_name, '1_r.png')))
     hts, wts, cts = test_median_res.shape
     train_img_paths = get_img_paths(train_median_res_dir)
 
-    for pixel_data in pixels_data:
-        pixel_pos = pixel_data['pos']
-        true_val = np.array(pixel_data['rgb'])
-
+    for pixel_pos in pixels_pos:
         save_path = f"{save_dir}/{scene_name}/{str(pixel_pos[0]) + '_' + str(pixel_pos[1])}"
         Path(save_path).mkdir(parents=True, exist_ok=True)
 
@@ -63,7 +64,6 @@ for scene_name, pixels_data in pixels.items():
         w_patch_size = wts2 - wts1
 
         # search and save similar patch in train data
-        flag = False
         for train_median_res_file, train_clean_file in train_img_paths:
             train_median_res = np.asarray(Image.open(train_median_res_file))
             train_clean = np.asarray(Image.open(train_clean_file))
@@ -82,9 +82,6 @@ for scene_name, pixels_data in pixels.items():
 
                     if distance <= min_dis:
                         pred_val = np.mean(train_clean_patch, axis=(0, 1))
-
-                        flag = flag or (sum(np.abs(pred_val - true_val)) <= 3.0 * 3.0)
-
                         Image.fromarray(train_median_patch).save(
                             os.path.join(save_path,
                                          'train_median_patch_{}_{}_{}.png'.format(h_idx, w_idx, np.round(distance, 3))))
@@ -93,14 +90,3 @@ for scene_name, pixels_data in pixels.items():
                                                                                  h_idx,
                                                                                  w_idx,
                                                                                  np.round(pred_val, 3))))
-
-        if flag:
-            if scene_name in valid_pixels:
-                valid_pixels[scene_name].append(pixel_pos)
-            else:
-                valid_pixels[scene_name] = [pixel_pos]
-            print(valid_pixels)
-
-fw = open('D:/job/competition/gt_rain_best_result/valid_pixels.pkl', 'wb')
-pickle.dump(valid_pixels, fw)
-print(valid_pixels)
