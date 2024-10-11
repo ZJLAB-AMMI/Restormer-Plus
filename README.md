@@ -1,4 +1,4 @@
-# Restormer-Plus for Real World Image Deraining: the Runner-up Solution to the GT-RAIN Challenge (CVPR 2023 UG2+ Track 3)
+# Restormer-Plus for Real World Image Deraining: One State-of-the-Art Solution to the GT-RAIN Challenge (CVPR 2023 UG2+ Track 3)
 This is the Python code used to implement the Restormer-Plus method as described in the technical report:
 
 [**Restormer-Plus for Real World Image Deraining: One State-of-the-Art Solution to the GT-RAIN Challenge (CVPR 2023 UG2+ Track 3)**  
